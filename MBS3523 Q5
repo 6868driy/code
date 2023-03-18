@@ -1,0 +1,36 @@
+import cv2
+
+window_name = 'Trackbar Example'
+
+line_pos = 320
+
+def on_trackbar(pos):
+    global line_pos
+    line_pos = pos
+
+img = cv2.imread('blank.jpg')
+
+font = cv2.FONT_HERSHEY_SIMPLEX
+text = 'MBS3523 Assignment 1 - Q5    Name: Lai Ka Ming'
+
+text_size, _ = cv2.getTextSize(text, font, 1, 2)
+text_x = (640 - text_size[0]) // 2
+text_y = text_size[1] + 10
+
+cv2.namedWindow(window_name)
+cv2.createTrackbar('Line Position', window_name, line_pos, 640, on_trackbar)
+
+while True:
+    line_start = (line_pos, 0)
+    line_end = (line_pos, 480)
+
+    img = cv2.line(img, line_start, line_end, (255, 0, 0), 2)
+
+    cv2.putText(img, text, (text_x, text_y), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
+
+    cv2.imshow(window_name, img)
+
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+cv2.destroyAllWindows()
