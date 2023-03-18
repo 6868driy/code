@@ -1,0 +1,52 @@
+import cv2
+import numpy as np
+
+cap = cv2.VideoCapture(0)
+
+cap.set(3, 640)
+cap.set(4, 480)
+
+x, y = np.random.randint(50, 400), np.random.randint(50, 300)
+vx, vy = 5, 7
+theta = np.random.randint(15, 75)
+
+box_size = 80
+box_color = (255, 0, 0)
+
+font = cv2.FONT_HERSHEY_SIMPLEX
+text = 'MBS3523 Assignment 1 - Q3    Name: Lai Ka Ming
+
+text_size, _ = cv2.getTextSize(text, font, 1, 2)
+text_x = (640 - text_size[0]) // 2
+text_y = text_size[1] + 10
+
+while True:
+    ret, frame = cap.read()
+    
+    cv2.rectangle(frame, (x, y), (x + box_size, y + box_size), box_color, -1)
+    
+    cv2.putText(frame, text, (text_x, text_y), font, 1, (0, 255, 0), 2, cv2.LINE_AA)
+    
+    x += int(vx * np.cos(np.radians(theta)))
+    y += int(vy * np.sin(np.radians(theta)))
+    
+    if x < 0:
+        x = 0
+        vx *= -1
+    elif x + box_size > 640:
+        x = 640 - box_size
+        vx *= -1
+    if y < 0:
+        y = 0
+        vy *= -1
+    elif y + box_size > 480:
+        y = 480 - box_size
+        vy *= -1
+    
+    cv2.imshow("Bouncing Box", frame)
+    
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+cap.release()
+cv2.destroyAllWindows()
